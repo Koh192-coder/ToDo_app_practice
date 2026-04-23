@@ -1,13 +1,13 @@
 
 
-from fastapi import APIRouter
-from crud import create_user
+
 from database import SessionLocal
-from fastapi import Depends
-from schemas import UserCreate
+from fastapi import HTTPException,APIRouter,Depends
+from schemas import UserCreate,UserLogin
 from database import SessionLocal
 from sqlalchemy.orm import Session
-from crud import create_user, get_users,update_user,delete_user
+import crud
+import auth
 
 router = APIRouter()
 
@@ -22,25 +22,32 @@ def get_db():
     finally:
         db.close()
 
-@router.login("/users/login")
-async def login_user_endpoint(user:UserCreate):
-    return 
-
+@router.post("/users/login")
+async def login_user_endpoint(user: UserLogin, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_email(db, user.email)
+    if not db_user:
+        raise HTTPException(status_code=401, detail="メールアドレスが違います")
+    if not auth.verify_password(user.password, db_user.password):
+        raise HTTPException(status_code=401, detail="パスワードが違います")
+    token = auth.create_access_token({"sub": db_user.email})
+    return {"access_token": token, "token_type": "bearer"}
+    
 
 @router.post("/users")
 async def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)):
-    return create_user(db,user)
+    return crud.create_user(db,user)
 
 
 @router.get("/users")
 async def get_users_endpoint(db: Session = Depends(get_db)):
-    return get_users(db)
+    return crud.get_users(db)
 
 
 @router.put("/users/{user_id}")
 async def update_user_endpoint(user_id: int, user: UserCreate, db: Session = Depends(get_db)):
-    return update_user(db,user_id,user)
+    return crud.update_user(db,user_id,user)
 
 @router.delete("/users/{user_id}")
 async def delete_user_endpoint(user_id: int,db: Session = Depends(get_db)):
-    return delete_user(db,user_id)
+    return crud.delete_user(db,user_id)
+
