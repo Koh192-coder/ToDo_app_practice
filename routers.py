@@ -55,3 +55,9 @@ async def update_user_endpoint(user_id: int, user: UserCreate, db: Session = Dep
 @router.delete("/users/{user_id}")
 async def delete_user_endpoint(user_id: int, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     return crud.delete_user(db, user_id)
+
+
+
+
+
+    

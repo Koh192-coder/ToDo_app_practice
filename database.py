@@ -20,6 +20,3 @@ SessionLocal = sessionmaker(
 # テーブルの設計図の親クラス
 # これを継承し、子クラスでテーブルをつくることで初めてテーブルになる
 Base = declarative_base()
-
-
-
