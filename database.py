@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 # DBとの接続を作る
-engine = create_engine("postgresql://postgres:hal192@localhost:5432/postgres")
+engine = create_engine("postgresql://postgres:YOUR_PASSWORD@localhost:5432/postgres")
 
 
 
