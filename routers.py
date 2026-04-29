@@ -23,6 +23,7 @@ def get_db():
     finally:
         db.close()
 
+# Depends()で引数の関数の結果が渡される Dependはリクエストの度にSessionが生成され、破棄する
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     email = auth.verify_token(token)
     user = crud.get_user_by_email(db, email)

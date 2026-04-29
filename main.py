@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from routers import router
 
-Base.metadata.create_all(bind=engine)
+
 
 
 

@@ -4,9 +4,14 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
+DATABASE_URL = os.getenv('DATABASE_URL')
 # DBとの接続を作る
-engine = create_engine("postgresql://postgres:YOUR_PASSWORD@localhost:5432/postgres")
+engine = create_engine(DATABASE_URL)
+
+
 
 
 

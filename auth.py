@@ -1,7 +1,7 @@
 
 
 from passlib.context import CryptContext
-from jose import jwt
+from jose import jwt,JWTError
 from datetime import datetime, timedelta,timezone
 from fastapi import HTTPException
 
@@ -35,13 +35,12 @@ def create_access_token(data: dict):
 
 def verify_token(token:str):
     try:
-        decoded_payload = jwt.decode(token, SECRET_KEY,algorithms = ["HS256"])
-        
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="トークンの有効期限が切れています")
+        payload = jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
+        email = payload.get("sub")
+        if email is None:
+            raise HTTPException(status_code=401, detail="無効なトークンです")
 
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="無効なトークンです")
+        return email
+    except JWTError:
+        raise HTTPException(status_code=401, detail="トークンが不正です")
     
-    return decoded_payload["sub"]
-
