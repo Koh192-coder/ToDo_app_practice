@@ -4,7 +4,10 @@ from passlib.context import CryptContext
 from jose import jwt,JWTError
 from datetime import datetime, timedelta,timezone
 from fastapi import HTTPException
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -16,7 +19,7 @@ def verify_password(plain_password: str, hashed_password: str):
 
 # SECRET_KEY は鍵、ALGORITHM は鍵の使い方
 
-SECRET_KEY = "your-secret-key"
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 
 
